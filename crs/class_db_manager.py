@@ -14,19 +14,20 @@ class DBManager:
         """
         получает список всех компаний и количество вакансий у каждой компании.
         """
-        query = 'select company, COUNT(*) from vacancies'
+        query = 'SELECT comp_title, COUNT(vac_id) FROM companies INNER JOIN vacancies USING (comp_id) GROUP BY comp_title'
         with self.connection.cursor() as cursor:
             cursor.execute(query)
-            return cursor.fetchall()
+            return f'азвание компании и кол-во вакансий: {cursor.fetchall()}\n'
 
     def get_all_vacancies(self):
         """
         получает список всех вакансий с указанием названия компании, названия вакансии и зарплаты и ссылки на вакансию.
         """
-        query = 'select * from vacancies'
+        query = 'select * from vacancies INNER JOIN companies USING (comp_id)'
         with self.connection.cursor() as cursor:
             cursor.execute(query)
-            return cursor.fetchall()
+            return (f'список всех вакансий с указанием названия компании, названия вакансии и зарплаты и ссылки на '
+                    f'вакансию: {cursor.fetchall()}\n')
 
     def get_avg_salary(self):
         """
@@ -35,7 +36,7 @@ class DBManager:
         query = 'select avg(salary) from vacancies'
         with self.connection.cursor() as cursor:
             cursor.execute(query)
-            return cursor.fetchall()
+            return f'средняя зарплата по вакансиям: {cursor.fetchall()}\n'
 
     def get_vacancies_with_higher_salary(self):
         """
@@ -44,7 +45,7 @@ class DBManager:
         query = 'select * from vacancies where salary > (select avg(salary) from vacancies)'
         with self.connection.cursor() as cursor:
             cursor.execute(query)
-            return cursor.fetchall()
+            return f'список всех вакансий, у которых зарплата выше средней по всем вакансиям: {cursor.fetchall()}\n'
 
     def get_vacancies_with_keyword(self):
         """
@@ -56,5 +57,5 @@ class DBManager:
             cursor.execute(query)
             return cursor.fetchall()
 
-    def __exit__ (self, exc_type, exc_val, exc_tab):
+    def __exit__(self, exc_type, exc_val, exc_tab):
         self.connection.close()
