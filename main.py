@@ -16,4 +16,3 @@ print(DBManager(host, port, user, password).get_avg_salary())
 print(DBManager(host, port, user, password).get_all_vacancies())
 print(DBManager(host, port, user, password).get_vacancies_with_higher_salary())
 print(DBManager(host, port, user, password).get_vacancies_with_keyword())
-
